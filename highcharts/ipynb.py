@@ -16,8 +16,7 @@ if _ip and (_ip.__module__.startswith('IPython') or _ip.__module__.startswith('i
         '''Function to return the HTML code for the div container plus the javascript
         to generate the chart.  This function is bound to the ipython formatter so that
         charts are displayed inline.'''
-
-        return chart.iframe
+        pass
 
     def _setup_ipython_formatter(ip):
         ''' Set up the ipython formatter to display HTML formatted output inline'''

@@ -32,75 +32,7 @@ class BaseOptions(object):
         return isinstance(v, ov) 
 
     def update_dict(self, **kwargs):
-        for k, v in kwargs.items(): 
-            if k in self.ALLOWED_OPTIONS:
-                # if isinstance(self.ALLOWED_OPTIONS[k], tuple) and isinstance(self.ALLOWED_OPTIONS[k][0](), SeriesOptions):
-                if k in PlotOptions.ALLOWED_OPTIONS.keys():
-                    if self.__getattr__(k):
-                        self.__dict__[k].update(series_type=k, **v)
-                    else:
-                        v = SeriesOptions(series_type=k, **v)
-                        self.__dict__.update({k:v})
-
-                elif isinstance(self.ALLOWED_OPTIONS[k], tuple) and isinstance(self.ALLOWED_OPTIONS[k][0](), CommonObject):
-                    if isinstance(v, dict): 
-                        if self.__getattr__(k): 
-                            self.__dict__[k].update(v) #update dict
-                        else: # first
-                            self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                    else:
-                        OptionTypeError("Not An Accepted Input Type: %s, must be dictionary" % type(v))
-
-                elif isinstance(self.ALLOWED_OPTIONS[k], tuple) and isinstance(self.ALLOWED_OPTIONS[k][0](), ArrayObject):
-                    if self.__getattr__(k): #existing attr
-                        if isinstance(v, dict):
-                            self.__dict__[k].update(v) # update array
-                        elif isinstance(v, list):
-                            for item in v:
-                                self.__dict__[k].update(item) # update array
-                        else:
-                            OptionTypeError("Not An Accepted Input Type: %s, must be list or dictionary" 
-                                            % type(v))          
-                    else: #first 
-                        if isinstance(v, dict):
-                            self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                        elif isinstance(v, list):
-                            if len(v) == 1:
-                                self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v[0])})
-                            else:
-                                self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v[0])})
-                                for item in v[1:]:
-                                    self.__dict__[k].update(item)
-                        else:
-                            OptionTypeError("Not An Accepted Input Type: %s, must be list or dictionary"
-                                            % type(v))
-
-                elif isinstance(self.ALLOWED_OPTIONS[k], tuple) and \
-                    (isinstance(self.ALLOWED_OPTIONS[k][0](), CSSObject) or isinstance(self.ALLOWED_OPTIONS[k][0](), SVGObject)):
-                    if self.__getattr__(k): 
-                        for key, value in v.items(): # check if v has object input 
-                            self.__dict__[k].__options__().update({key:value})
-                        
-                        v = self.__dict__[k].__options__()
-                    # upating object
-                    if isinstance(v, dict):
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                    else:
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](v)})
-
-                elif isinstance(self.ALLOWED_OPTIONS[k], tuple) and (isinstance(self.ALLOWED_OPTIONS[k][0](), JSfunction) or \
-                    isinstance(self.ALLOWED_OPTIONS[k][0](), Formatter) or isinstance(self.ALLOWED_OPTIONS[k][0](), ColorObject)):
-                    if isinstance(v, dict):
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                    else:
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](v)})
-                else:
-                    self.__dict__.update({k:v})
-
-            else:
-                print(self.ALLOWED_OPTIONS)
-                print(k, v)
-                raise OptionTypeError("Not An Accepted Option Type: %s" % k)
+        pass
 
 
     def __getattr__(self, item):
@@ -205,12 +137,7 @@ class ColorsOptions(BaseOptions):
         self.colors = {}
 
     def set_colors(self, colors):
-        if isinstance(colors, basestring):
-            self.colors = ColorObject(colors)
-        elif isinstance(colors, list) or isinstance(colors, dict):
-            self.colors  = colors
-        else:
-            OptionTypeError("Not An Accepted Input Type: %s" % type(colors))
+        pass
 
 
     def __jsonable__(self):
@@ -650,7 +577,7 @@ class MultiAxis(object):
         self.AxisObj = AXIS_LIST[axis]
 
     def update(self, **kwargs):
-        self.axis.append(self.AxisObj(**kwargs))
+        pass
         
     def __jsonable__(self):
         return self.axis

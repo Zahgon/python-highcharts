@@ -233,7 +233,7 @@ class RawJavaScriptText:
     def __init__(self, jstext):
         self._jstext = jstext   
     def get_jstext(self):
-        return self._jstext
+        pass
 
 
 class CommonObject(object):
@@ -261,76 +261,11 @@ class CommonObject(object):
         return self.__dict__
 
     def update(self, kwargs):
-        for k, v in kwargs.items(): 
-            if k in self.ALLOWED_OPTIONS:
-                if isinstance(self.ALLOWED_OPTIONS[k], tuple) and isinstance(self.ALLOWED_OPTIONS[k][0](), CommonObject):
-                    # re-construct input dict with existing options in objects
-                    if self.__getattr__(k):
-                        if isinstance(v, dict):
-                            self.__options__()[k].update(v)
-                        else:
-                            self.__options__()[k].__options__().update(v)
-                    else:
-                        self.__options__().update({k:allowed_args[k][0](**v)}) 
-
-                elif isinstance(self.ALLOWED_OPTIONS[k], tuple) and isinstance(self.ALLOWED_OPTIONS[k][0](), ArrayObject):
-                    # update array 
-                    if isinstance(v, dict):
-                        self.__dict__[k].append(self.ALLOWED_OPTIONS[k][0](**v))
-                    elif isinstance(v, list):
-                        for item in v:
-                            self.__dict__[k].append(self.ALLOWED_OPTIONS[k][0](**item))
-                    else:
-                        OptionTypeError("Not An Accepted Input Type: %s" % type(v))        
-
-                elif isinstance(self.ALLOWED_OPTIONS[k], tuple) and \
-                    (isinstance(self.ALLOWED_OPTIONS[k][0](), CSSObject) or isinstance(self.ALLOWED_OPTIONS[k][0](), SVGObject)):
-                    if self.__getattr__(k):
-                        for key, value in v.items():
-                            self.__dict__[k].__options__().update({key:value})
-                    else:
-                        self.__dict__.update({k:allowed_args[k][0](**v)})
-                    
-                    v = self.__dict__[k].__options__()
-                    # upating object
-                    if isinstance(v, dict):
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                    else:
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](v)})
-
-                elif isinstance(self.ALLOWED_OPTIONS[k], tuple) and (isinstance(self.ALLOWED_OPTIONS[k][0](), JSfunction) or
-                    isinstance(self.ALLOWED_OPTIONS[k][0](), Formatter) or isinstance(self.ALLOWED_OPTIONS[k][0](), ColorObject)):
-                    if isinstance(v, dict):
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                    else:
-                        self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](v)})
-                else:
-                    self.__dict__.update({k:v})
-
-            else:
-                raise OptionTypeError("Not An Accepted Option Type: %s" % k)
+        pass
 
     def process_kwargs(self, kwargs):
         
-        for k, v in kwargs.items():
-            if k in self.ALLOWED_OPTIONS:
-                if self.__validate_options__(k,v,self.ALLOWED_OPTIONS[k]):
-                    if isinstance(self.ALLOWED_OPTIONS[k], tuple) and \
-                        self.ALLOWED_OPTIONS[k][0] in IDV_OBJECT_LIST:
-                        if isinstance(v, dict):
-                            self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                        elif isinstance(v, CommonObject) or isinstance(v, ArrayObject) or \
-                            isinstance(v, CSSObject) or isinstance(v, SVGObject) or isinstance(v, ColorObject) or \
-                            isinstance(v, JSfunction) or isinstance(v, Formatter) or isinstance(v, datetime.datetime):
-                            self.__dict__.update({k:v})
-                        else:
-                            self.__dict__.update({k:self.ALLOWED_OPTIONS[k][0](v)})
-                    else:
-                        self.__dict__.update({k:v})
-                else:
-                    raise OptionTypeError("Option Type Mismatch: Expected: %s" % self.ALLOWED_OPTIONS[k])
-            else:
-                raise OptionTypeError("Option: %s Not Allowed For Event Class:" % k)
+        pass
 
     def __getattr__(self, item):
         if not item in self.__dict__:
@@ -621,30 +556,10 @@ class ArrayObject(object):
         return self.data
 
     def update(self, kwargs):
-        self.process_kwargs(kwargs)
+        pass
 
     def process_kwargs(self, kwargs):
-        temp = {}
-        for k, v in kwargs.items():
-            if k in self.ALLOWED_OPTIONS:
-                if self.__validate_options__(k,v,self.ALLOWED_OPTIONS[k]):
-                    if isinstance(self.ALLOWED_OPTIONS[k], tuple) and \
-                        self.ALLOWED_OPTIONS[k][0] in IDV_OBJECT_LIST:
-                        if isinstance(v, dict):
-                            temp.update({k:self.ALLOWED_OPTIONS[k][0](**v)})
-                        elif isinstance(v, CommonObject) or isinstance(v, ArrayObject) or \
-                            isinstance(v, CSSObject) or isinstance(v, SVGObject) or isinstance(v, ColorObject) or \
-                            isinstance(v, JSfunction) or isinstance(v, Formatter) or isinstance(v, datetime.datetime):
-                            temp.update({k:v})
-                        else:
-                            temp.update({k:self.ALLOWED_OPTIONS[k][0](v)})
-                    else:
-                        temp.update({k:v})   
-                else: 
-                    raise OptionTypeError("Option Type Mismatch: Expected: %s" % self.ALLOWED_OPTIONS[k])
-            else: 
-                raise OptionTypeError("Option: %s Not Allowed For Event Class:" % k)
-        self.data.append(temp)
+        pass
 
 class PlotBands(ArrayObject):
     ALLOWED_OPTIONS = {

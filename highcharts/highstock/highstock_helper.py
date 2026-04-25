@@ -21,29 +21,10 @@ def jsonp_loader(url, prefix_regex=r'^(.*\()', suffix_regex=r'(\);)$', sub_d=Non
     4. "sub_by" is the string to replace any unwanted string defined by sub_d
     For function coverstion, such as Data.UTC to datetime.datetime, please check JSONPDecoder
     """
-    
-    hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7'}
-    req = urllib.request.Request(url, headers=hdr)
-    page = urlopen(req)
-    result = page.read().decode("utf-8")
-    # replace all the redundant info with sub_by 
-    if sub_d:
-        result = re.sub(sub_d, sub_by, result)
-
-    prefix = re.search(prefix_regex, result).group()
-    suffix = re.search(suffix_regex, result).group()
-    if result.startswith(prefix) and result.endswith(suffix):
-        result = result[len(prefix):-len(suffix)]
-    return json.loads(result, encoding='utf8', cls=JSONPDecoder)
+    pass
 
 def interpolateRGB(lowRGB, highRGB, fraction):
-    color = []
-
-    for i in range(3):
-        color.append((highRGB[i] - lowRGB[i]) * fraction + lowRGB[i])
-
-    return 'rgb(' + str(int(round(color[0],0))) + ',' + str(int(round(color[1],0))) + ',' + \
-        str(int(round(color[2],0))) + ')'
+    pass
 
 
 class JSONPDecoder(json.JSONDecoder):
@@ -60,54 +41,23 @@ class JSONPDecoder(json.JSONDecoder):
         """
         json_string is basicly string that you give to json.loads method
         """
-
-        default_obj = super(JSONPDecoder, self).decode(json_string)
-        
-        return list(self._iterdecode(default_obj))[0]
+        pass
 
     def _iterdecode_list(self, lst):
-        new_lst = []
-        for item in lst:
-            for chunk in self._iterdecode(item):
-                new_lst.append(chunk)
-        yield new_lst
+        pass
 
     def _iterdecode_dict(self, dct):
-        new_dct = {}
-        for key, value in dct.items():
-            for chunk in self._iterdecode(value):
-                new_dct[key] = chunk
-        yield new_dct
+        pass
 
     def _iterdecode(self, obj):
-        if isinstance(obj, (list, tuple)):
-            for chunk in self._iterdecode_list(obj):
-                yield chunk
-
-        elif isinstance(obj, dict):
-            for chunk in self._iterdecode_dict(obj): 
-                yield chunk
-
-        elif isinstance(obj, basestring) and JSONPDecoder.is_js_date_utc(obj):
-            m = JSONPDecoder.is_js_date_utc(obj)
-            yield JSONPDecoder.json2datetime(m)
-
-        else:
-            yield obj
+        pass
 
     @staticmethod
     def is_js_date_utc(json):
         """Check if the string contains Date.UTC function 
         and return match group(s) if there is
         """
-        
-        JS_date_utc_pattern = r'Date\.UTC\(([0-9]+,[0-9]+,[0-9]+)(,[0-9]+,[0-9]+,[0-9]+)?(,[0-9]+)?\)'
-        re_date = re.compile(JS_date_utc_pattern, re.M)
-
-        if re_date.search(json):
-            return re_date.search(json).group(0)
-        else:
-            return False
+        pass
 
     @staticmethod
     def json2datetime(json):
@@ -115,25 +65,7 @@ class JSONPDecoder(json.JSONDecoder):
         the argument count. Requires UTC datetime representation.
         Raises ValueError if the string cannot be parsed.
         """
-        
-        json_m = re.search(r'([0-9]+,[0-9]+,[0-9]+)(,[0-9]+,[0-9]+,[0-9]+)?(,[0-9]+)?', json)
-        args=json_m.group(0).split(',')
-        
-        try:
-            args = list(map(int, args))
-        except ValueError:
-            raise ValueError('Invalid arguments: %s'%json)
-
-        if len(args)==3: 
-            return datetime.datetime(args[0], args[1]+1, args[2])
-        elif len(args)==6: 
-            return datetime.datetime(args[0], args[1]+1, args[2], 
-                                    args[3], args[4], args[5], tzinfo=UTC())
-        elif len(args)==7:
-            args[6]*=1000
-            return datetime.datetime(args[0], args[1]+1, args[2], 
-                                    args[3], args[4], args[5], args[6], tzinfo=UTC())
-        raise ValueError('Invalid number of arguments: %s'%json)
+        pass
 
 
 class UTC(tzinfo):
@@ -142,12 +74,12 @@ class UTC(tzinfo):
     ZERO=datetime.timedelta(0)
     
     def utcoffset(self, dt):
-        return ZERO
+        pass
     
     def tzname(self, dt):
-        return "UTC"
+        pass
     
     def dst(self, dt):
-        return ZERO
+        pass
 
 

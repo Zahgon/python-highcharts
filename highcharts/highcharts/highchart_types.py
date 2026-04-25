@@ -523,91 +523,15 @@ class SeriesOptions(object):
         return self.__dict__
 
     def update(self,series_type, **kwargs):
-        allowed_args = PLOT_OPTION_ALLOWED_ARGS[series_type]
-        allowed_args.update(PLOT_OPTION_ALLOWED_ARGS["common"])
-        for k, v in kwargs.items():
-            if k in allowed_args:
-                if SeriesOptions.__validate_options__(k,v,allowed_args[k]):
-                    if isinstance(allowed_args[k], tuple) and isinstance(allowed_args[k][0](), CommonObject):
-                        # re-construct input dict with existing options in objects
-                        if self.__getattr__(k):
-                            if isinstance(v, dict):
-                                self.__options__()[k].update(v)
-                            else:
-                                self.__options__()[k].__options__().update(v)
-                        else:
-                            self.__options__().update({k:allowed_args[k][0](**v)}) 
-
-                    elif isinstance(allowed_args[k], tuple) and isinstance(allowed_args[k][0](), ArrayObject):
-                        # update array 
-                        if isinstance(v, dict):
-                            self.__dict__[k].append(allowed_args[k][0](**v))
-                        elif isinstance(v, list):
-                            for item in v:
-                                self.__dict__[k].append(allowed_args[k][0](**item))
-                        else:
-                            OptionTypeError("Not An Accepted Input Type: %s" % type(v))        
-
-                    elif isinstance(allowed_args[k], tuple) and \
-                        (isinstance(allowed_args[k][0](), CSSObject) or isinstance(allowed_args[k][0](), SVGObject)):
-                        if self.__getattr__(k):
-                            for key, value in v.items():
-                                self.__dict__[k].__options__().update({key:value})
-                        else:
-                            self.__dict__.update({k:allowed_args[k][0](**v)})
-                        
-                        v = self.__dict__[k].__options__()
-                        # upating object
-                        if isinstance(v, dict):
-                            self.__dict__.update({k:allowed_args[k][0](**v)})
-                        else:
-                            self.__dict__.update({k:allowed_args[k][0](v)})
-
-                    elif isinstance(allowed_args[k], tuple) and (isinstance(allowed_args[k][0](), JSfunction) or
-                        isinstance(allowed_args[k][0](), Formatter) or isinstance(allowed_args[k][0](), ColorObject)):
-                        if isinstance(v, dict):
-                            self.__dict__.update({k:allowed_args[k][0](**v)})
-                        else:
-                            self.__dict__.update({k:allowed_args[k][0](v)})
-                    else:
-                        self.__dict__.update({k:v})
-            else: 
-                print(k,v)
-                if not supress_errors: raise OptionTypeError("Option Type Mismatch: Expected: %s" % allowed_args[k])
+        pass
                 
 
     def process_kwargs(self,kwargs,series_type,supress_errors=False):
-        allowed_args = PLOT_OPTION_ALLOWED_ARGS[series_type]
-        allowed_args.update(PLOT_OPTION_ALLOWED_ARGS["common"])
-
-        for k, v in kwargs.items():
-            if k in allowed_args:
-                if SeriesOptions.__validate_options__(k,v,allowed_args[k]):
-                    if isinstance(allowed_args[k], tuple):
-                        if isinstance(v, dict):
-                            self.__dict__.update({k:allowed_args[k][0](**v)})
-                        elif isinstance(v, list):
-                            if len(v) == 1:
-                                self.__dict__.update({k:allowed_args[k][0](**v[0])})
-                            else:
-                                self.__dict__.update({k:allowed_args[k][0](**v[0])})
-                                for item in v[1:]:
-                                    self.__dict__[k].update(item)                          
-                        elif isinstance(v, CommonObject) or isinstance(v, ArrayObject) or \
-                            isinstance(v, CSSObject) or isinstance(v, SVGObject) or isinstance(v, ColorObject) or \
-                            isinstance(v, JSfunction) or isinstance(v, Formatter) or isinstance(v, datetime.datetime):
-                            self.__dict__.update({k:v})
-                        else:
-                            self.__dict__.update({k:allowed_args[k][0](v)})
-                    else:
-                        self.__dict__.update({k:v})          
-                else: 
-                    print(k,v)
-                    if not supress_errors: raise OptionTypeError("Option Type Mismatch: Expected: %s" % allowed_args[k])
+        pass
            
 
     def load_defaults(self,series_type): # not in use
-        self.process_kwargs(DEFAULT_OPTIONS.get(series_type,{}),series_type)
+        pass
 
     def __getattr__(self,item):
         if not item in self.__dict__:
